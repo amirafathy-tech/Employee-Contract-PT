@@ -1,20 +1,4 @@
 {
-  "xsappname": "employee-contract-pt",
-  "tenant-mode": "dedicated",
-  "description": "Security profile of called application",
-  "scopes": [
-    {
-      "name": "uaa.user",
-      "description": "UAA"
-    }
-  ],
-  "role-templates": [
-    {
-      "name": "Token_Exchange",
-      "description": "UAA",
-      "scope-references": [
-        "uaa.user"
-      ]
-    }
-  ]
+  "xsappname": "Employee-Contract-PT-${org}-${space}",
+  "tenant-mode": "dedicated"
 }

@@ -1,103 +1,58 @@
 _schema-version: 3.3.0
 ID: Employee-Contract-PT
-description: A simple CAP project.
 version: 1.0.0
-modules:
-- name: Employee-Contract-PT-srv
-  type: nodejs
-  path: gen/srv
-  requires:
-  - name: Employee-Contract-PT-db
-  provides:
-  - name: srv-api
-    properties:
-      srv-url: ${default-url}
-  parameters:
-    buildpack: nodejs_buildpack
-    instances: 1
-  build-parameters:
-    builder: npm-ci
-- name: Employee-Contract-PT-db-deployer
-  type: hdb
-  path: gen/db
-  requires:
-  - name: Employee-Contract-PT-db
-  parameters:
-    buildpack: nodejs_buildpack
-- name: Employee-Contract-PT-destination-content
-  type: com.sap.application.content
-  requires:
-  - name: Employee-Contract-PT-destination-service
-    parameters:
-      content-target: true
-  - name: Employee-Contract-PT_html_repo_host
-    parameters:
-      service-key:
-        name: Employee-Contract-PT_html_repo_host-key
-  - name: uaa_Employee-Contract-PT
-    parameters:
-      service-key:
-        name: uaa_Employee-Contract-PT-key
-  parameters:
-    content:
-      instance:
-        destinations:
-        - Name: Employee_Contract_PT_Employee_Contract_PT_html_repo_host
-          ServiceInstanceName: Employee-Contract-PT-html5-app-host-service
-          ServiceKeyName: Employee-Contract-PT_html_repo_host-key
-          sap.cloud.service: Employee-Contract-PT
-        - Authentication: OAuth2UserTokenExchange
-          Name: Employee_Contract_PT_uaa_Employee_Contract_PT
-          ServiceInstanceName: Employee-Contract-PT-xsuaa-service
-          ServiceKeyName: uaa_Employee-Contract-PT-key
-          sap.cloud.service: Employee-Contract-PT
-        existing_destinations_policy: ignore
-  build-parameters:
-    no-source: true
-resources:
-- name: Employee-Contract-PT-db
-  type: com.sap.xs.hdi-container
-  parameters:
-    service: hana
-    service-plan: hdi-shared
-- name: Employee-Contract-PT-destination-service
-  type: org.cloudfoundry.managed-service
-  parameters:
-    config:
-      HTML5Runtime_enabled: true
-      version: 1.0.0
-    service: destination
-    service-name: Employee-Contract-PT-destination-service
-    service-plan: lite
-- name: Employee-Contract-PT_html_repo_host
-  type: org.cloudfoundry.managed-service
-  parameters:
-    service: html5-apps-repo
-    service-name: Employee-Contract-PT-html5-app-host-service
-    service-plan: app-host
-- name: uaa_Employee-Contract-PT
-  type: org.cloudfoundry.managed-service
-  parameters:
-    path: ./xs-security.json
-    service: xsuaa
-    service-name: Employee-Contract-PT-xsuaa-service
-    service-plan: application
+description: "A simple CAP project."
 parameters:
   enable-parallel-deployments: true
 build-parameters:
   before-all:
-  - builder: custom
-    commands:
-    - npm ci
-    - npx cds build --production
+    - builder: custom
+      commands:
+        - npm ci
+        - npx cds build --production
+modules:
+  - name: Employee-Contract-PT-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      instances: 1
+      buildpack: nodejs_buildpack
+    build-parameters:
+      builder: npm-ci
+    provides:
+      - name: srv-api # required by consumers of CAP services (e.g. approuter)
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: Employee-Contract-PT-auth
+      - name: Employee-Contract-PT-db
+      - name: Employee-Contract-PT-destination
 
+  - name: Employee-Contract-PT-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    requires:
+      - name: Employee-Contract-PT-db
 
-
-
-
-
-
-
-
-
-    
+resources:
+  - name: Employee-Contract-PT-auth
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: Employee-Contract-PT-${org}-${space}
+        tenant-mode: dedicated
+  - name: Employee-Contract-PT-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
+  - name: Employee-Contract-PT-destination
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite
