@@ -1,0 +1,4 @@
+ID,name,email,contractEndDate,contractType,status,manager_ID
+e1,John Doe,john@example.com,2025-08-15,annually,active,m1
+e2,Alice Smith,alice@example.com,2025-09-17,6-months,active,m2
+e3,Tom Black,tom@example.com,2025-12-01,annually,active,m2
