@@ -5,7 +5,8 @@ service ContractService {
    entity Employees as projection on my.Employee;
    entity Managers as projection on my.Manager;
 
-  action CheckExpiringContracts() returns Integer;
+  // action CheckExpiringContracts() returns Integer;
+  action CheckExpiringContracts() returns array of Employees;
 
   action ContractRenewal(
     employeeID: UUID
