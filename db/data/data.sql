@@ -6,3 +6,5 @@ INSERT INTO "my_company_Employee" (ID, name, email, manager, contractEndDate, st
 INSERT INTO "my_company_Manager" (ID, name, email) VALUES
 ('m1', 'AMIRA', 'amira.fathy@solex.tech'),
 ('m2', 'Eman', 'eman.ayman@solex.tech');
+
+SELECT * FROM "88940FE5376A46AAB5DC1C211E16174B"."my_company_Employee";
