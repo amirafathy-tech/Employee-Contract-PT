@@ -3,6 +3,17 @@ const cds = require('@sap/cds');
 module.exports = cds.service.impl(async function () {
   const { Employee, Manager } = this.entities;
 
+  const { ExpiringContracts } = this.entities;
+
+    this.on('CheckExpiringContracts', async (req) => {
+        try {
+            const contracts = await SELECT.from(ExpiringContracts);
+            return contracts;
+        } catch (error) {
+            req.error(500, `Error fetching expiring contracts: ${error.message}`);
+        }
+    });
+
   // this.on('CheckExpiringContracts', async () => {
   //   const tx = cds.transaction(this);
   //   const today = new Date();
@@ -26,31 +37,31 @@ module.exports = cds.service.impl(async function () {
   // });
 
 
-  this.on('CheckExpiringContracts', async () => {
-    const tx = cds.transaction(this);
-    const today = new Date();
-    const next3Months = new Date(today);
-    next3Months.setMonth(today.getMonth() + 3);
+  // this.on('CheckExpiringContracts', async () => {
+  //   const tx = cds.transaction(this);
+  //   const today = new Date();
+  //   const next3Months = new Date(today);
+  //   next3Months.setMonth(today.getMonth() + 3);
 
-    const employees = await tx.run(
-      SELECT.from(Employee)
-        .columns('ID', 'name', 'email', 'contractEndDate', 'contractType', 'status', 'manager.ID', 'manager.name', 'manager.email')
-        .where({
-          contractEndDate: { '>=': today, '<=': next3Months },
-          status: 'active'
-        })
-    );
+  //   const employees = await tx.run(
+  //     SELECT.from(Employee)
+  //       .columns('ID', 'name', 'email', 'contractEndDate', 'contractType', 'status', 'manager.ID', 'manager.name', 'manager.email')
+  //       .where({
+  //         contractEndDate: { '>=': today, '<=': next3Months },
+  //         status: 'active'
+  //       })
+  //   );
 
-    for (const emp of employees) {
-      if (!emp.manager_ID) {
-        emp.manager_name = 'N/A';
-        emp.manager_email = 'N/A';
-      }
-      console.log(`Notify manager ${emp.manager_name} <${emp.manager_email}>: ${emp.name}'s contract ends on ${emp.contractEndDate}`);
-    }
+  //   for (const emp of employees) {
+  //     if (!emp.manager_ID) {
+  //       emp.manager_name = 'N/A';
+  //       emp.manager_email = 'N/A';
+  //     }
+  //     console.log(`Notify manager ${emp.manager_name} <${emp.manager_email}>: ${emp.name}'s contract ends on ${emp.contractEndDate}`);
+  //   }
 
-    return employees;
-  });
+  //   return employees;
+  // });
 
   this.on('ContractRenewal', async ({ data: { employeeID } }) => {
     const tx = cds.transaction(this);

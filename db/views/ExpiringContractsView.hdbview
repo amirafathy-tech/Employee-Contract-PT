@@ -1,0 +1,13 @@
+{
+  "viewName": "my.company::ExpiringContractsView",
+  "query": "SELECT * FROM \"88940FE5376A46AAB5DC1C211E16174B\".\"MY_COMPANY_EMPLOYEE\" e LEFT JOIN \"88940FE5376A46AAB5DC1C211E16174B\".\"MY_COMPANY_MANAGER\" m ON e.manager_ID = m.ID WHERE e.contractEndDate >= '2025-05-26' AND e.contractEndDate <= '2025-08-26' AND e.status = 'active'",
+  "dependsOn": [
+    {
+      "tableName": "88940FE5376A46AAB5DC1C211E16174B.MY_COMPANY_EMPLOYEE"
+    },
+    {
+      "tableName": "88940FE5376A46AAB5DC1C211E16174B.MY_COMPANY_MANAGER"
+    }
+  ],
+  "schema": "88940FE5376A46AAB5DC1C211E16174B"
+}
