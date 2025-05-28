@@ -119,7 +119,7 @@ const transporter = nodemailer.createTransport({
   secure: false,
   auth: {
     user: 'fathyamira689@gmail.com', // Replace with your email
-    pass: 'Mo2112006' // Use an app-specific password if 2FA is enabled
+    pass: '' // Use an app-specific password if 2FA is enabled
   }
 });
 
