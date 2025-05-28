@@ -27,6 +27,7 @@ modules:
       - name: Employee-Contract-PT-auth
       - name: Employee-Contract-PT-db
       - name: Employee-Contract-PT-destination
+      - name: contract-schedule-srv
 
   - name: Employee-Contract-PT-db-deployer
     type: hdb
@@ -56,3 +57,8 @@ resources:
     parameters:
       service: destination
       service-plan: lite
+  - name: contract-schedule-srv # Added Job Scheduler resource
+    type: com.sap.xs.job-scheduler
+    parameters:
+      service: jobscheduler
+      service-plan: lite   

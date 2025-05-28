@@ -7,9 +7,11 @@
   "private": true,
   "dependencies": {
     "@cap-js/hana": "^1",
-    "@sap/cds": "^8",
+    "@sap/cds": "^8.9.4",
     "@sap/xssec": "^4.7.0",
-    "express": "^4"
+    "express": "^4.21.2",
+    "node-cron": "^4.0.7",
+    "nodemailer": "^7.0.3"
   },
   "devDependencies": {
     "@cap-js/cds-types": "^0.10.0",
@@ -22,7 +24,12 @@
   "cds": {
     "requires": {
       "auth": "mocked",
-      "destinations": true},
+      "users": {
+        "user": "testuser",
+        "password": "testpass"
+      },
+      "destinations": true
+    },
     "sql": {
       "native_hana_associations": false
     }
